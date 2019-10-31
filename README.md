@@ -2,168 +2,141 @@
   <img src="https://www.corda.net/wp-content/uploads/2016/11/fg005_corda_b.png" alt="Corda" width="500">
 </p>
 
-# Bootcamp CorDapp
+# CorDapp Template - Java
 
-This project is the template we will use as a basis for developing a complete CorDapp 
-during today's bootcamp. Our CorDapp will allow the issuance of tokens onto the ledger.
+Welcome to the Java CorDapp template. The CorDapp template is a stubbed-out CorDapp that you can use to bootstrap 
+your own CorDapps.
 
-We'll develop the CorDapp using a test-driven approach. At each stage, you'll know your 
-CorDapp is working once it passes both sets of tests defined in `src/test/java/bootcamp`.
+**This is the Java version of the CorDapp template. The Kotlin equivalent is 
+[here](https://github.com/corda/cordapp-template-kotlin/).**
 
-## Set up
+# Pre-Requisites
 
-1. Download and install a JDK 8 JVM (minimum supported version 8u131)
-2. Download and install IntelliJ Community Edition (supported versions 2017.x and 2018.x)
-3. Download the bootcamp-cordapp repository:
+See https://docs.corda.net/getting-set-up.html.
 
-       git clone https://github.com/corda/bootcamp-cordapp
-       
-4. Open IntelliJ. From the splash screen, click `Import Project`, select the `bootcamp—
-cordapp` folder and click `Open`
-5. Select `Import project from external model > Gradle > Next > Finish`
-6. Click `File > Project Structure…` and select the Project SDK (Oracle JDK 8, 8u131+)
+# Usage
 
-    i. Add a new SDK if required by clicking `New…` and selecting the JDK’s folder
+## Running tests inside IntelliJ
+	
+We recommend editing your IntelliJ preferences so that you use the Gradle runner - this means that the quasar utils
+plugin will make sure that some flags (like ``-javaagent`` - see below) are
+set for you.
 
-7. Open the `Project` view by clicking `View > Tool Windows > Project`
-8. Run the test in `src/test/java/java_bootcamp/ProjectImportedOKTest.java`. It should pass!
+To switch to using the Gradle runner:
 
-## Links to useful resources
+* Navigate to ``Build, Execution, Deployment -> Build Tools -> Gradle -> Runner`` (or search for `runner`)
+  * Windows: this is in "Settings"
+  * MacOS: this is in "Preferences"
+* Set "Delegate IDE build/run actions to gradle" to true
+* Set "Run test using:" to "Gradle Test Runner"
 
-This project contains example state, contract and flow implementations:
+If you would prefer to use the built in IntelliJ JUnit test runner, you can run ``gradlew installQuasar`` which will
+copy your quasar JAR file to the lib directory. You will then need to specify ``-javaagent:lib/quasar.jar``
+and set the run directory to the project root directory for each test.
 
-* `src/main/java/java_examples/ArtState`
-* `src/main/java/java_examples/ArtContract`
-* `src/main/java/java_examples/ArtTransferFlowInitiator`
-* `src/main/java/java_examples/ArtTransferFlowResponder`
+## Running the nodes
 
-There are also several web resources that you will likely find useful for this
-bootcamp:
+See https://docs.corda.net/tutorial-cordapp.html#running-the-example-cordapp.
 
-* Key Concepts docs (`docs.corda.net/key-concepts.html`)
-* API docs (`docs.corda.net/api-index.html`)
-* Cheat sheet (`docs.corda.net/cheat-sheet.html`)
-* Sample CorDapps (`www.corda.net/samples`)
-* Stack Overflow (`www.stackoverflow.com/questions/tagged/corda`)
+## Interacting with the nodes
 
-## What we'll be building
+### Shell
 
-Our CorDapp will have three parts:
+When started via the command line, each node will display an interactive shell:
 
-### The TokenState
+    Welcome to the Corda interactive shell.
+    Useful commands include 'help' to see what is available, and 'bye' to shut down the node.
+    
+    Tue Nov 06 11:58:13 GMT 2018>>>
 
-States define shared facts on the ledger. Our state, TokenState, will define a
-token. It will have the following structure:
+You can use this shell to interact with your node. For example, enter `run networkMapSnapshot` to see a list of 
+the other nodes on the network:
 
-    -------------------
-    |                 |
-    |   TokenState    |
-    |                 |
-    |   - issuer      |
-    |   - owner       |
-    |   - amount      |
-    |                 |
-    -------------------
+    Tue Nov 06 11:58:13 GMT 2018>>> run networkMapSnapshot
+    [
+      {
+      "addresses" : [ "localhost:10002" ],
+      "legalIdentitiesAndCerts" : [ "O=Notary, L=London, C=GB" ],
+      "platformVersion" : 3,
+      "serial" : 1541505484825
+    },
+      {
+      "addresses" : [ "localhost:10005" ],
+      "legalIdentitiesAndCerts" : [ "O=PartyA, L=London, C=GB" ],
+      "platformVersion" : 3,
+      "serial" : 1541505382560
+    },
+      {
+      "addresses" : [ "localhost:10008" ],
+      "legalIdentitiesAndCerts" : [ "O=PartyB, L=New York, C=US" ],
+      "platformVersion" : 3,
+      "serial" : 1541505384742
+    }
+    ]
+    
+    Tue Nov 06 12:30:11 GMT 2018>>> 
 
-### The TokenContract
+You can find out more about the node shell [here](https://docs.corda.net/shell.html).
 
-Contracts govern how states evolve over time. Our contract, TokenContract,
-will define how TokenStates evolve. It will only allow the following type of
-TokenState transaction:
+### Client
 
-    -------------------------------------------------------------------------------------
-    |                                                                                   |
-    |    - - - - - - - - - -                                     -------------------    |
-    |                                              ▲             |                 |    |
-    |    |                 |                       | -►          |   TokenState    |    |
-    |            NO             -------------------     -►       |                 |    |
-    |    |                 |    |      Issue command       -►    |   - issuer      |    |
-    |          INPUTS           |     signed by issuer     -►    |   - owner       |    |
-    |    |                 |    -------------------     -►       |   - amount > 0  |    |
-    |                                              | -►          |                 |    |
-    |    - - - - - - - - - -                       ▼             -------------------    |
-    |                                                                                   |
-    -------------------------------------------------------------------------------------
+`clients/src/main/java/com/template/Client.java` defines a simple command-line client that connects to a node via RPC 
+and prints a list of the other nodes on the network.
 
-              No inputs             One issue command,                One output,
-                                 issuer is a required signer       amount is positive
+#### Running the client
 
-To do so, TokenContract will impose the following constraints on transactions
-involving TokenStates:
+##### Via the command line
 
-* The transaction has no input states
-* The transaction has one output state
-* The transaction has one command
-* The output state is a TokenState
-* The output state has a positive amount
-* The command is an Issue command
-* The command lists the TokenState's issuer as a required signer
+Run the `runTemplateClient` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
+the username `user1` and the password `test`.
 
-### The TokenIssueFlow
+##### Via IntelliJ
 
-Flows automate the process of updating the ledger. Our flow, TokenIssueFlow, will
-automate the following steps:
+Run the `Run Template Client` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
+with the username `user1` and the password `test`.
 
-            Issuer                  Owner                  Notary
-              |                       |                       |
-       Chooses a notary
-              |                       |                       |
-        Starts building
-         a transaction                |                       |
-              |
-        Adds the output               |                       |
-          TokenState
-              |                       |                       |
-           Adds the
-         Issue command                |                       |
-              |
-         Verifies the                 |                       |
-          transaction
-              |                       |                       |
-          Signs the
-         transaction                  |                       |
-              |
-              |----------------------------------------------►|
-              |                       |                       |
-                                                         Notarises the
-              |                       |                   transaction
-                                                              |
-              |◀----------------------------------------------|
-              |                       |                       |
-         Records the
-         transaction                  |                       |
-              |
-              |----------------------►|                       |
-                                      |
-              |                  Records the                  |
-                                 transaction
-              |                       |                       |
-              ▼                       ▼                       ▼
+### Webserver
 
-## Running our CorDapp
+`clients/src/main/java/com/template/webserver/` defines a simple Spring webserver that connects to a node via RPC and 
+allows you to interact with the node over HTTP.
 
-Normally, you'd interact with a CorDapp via a client or webserver. So we can
-focus on our CorDapp, we'll be running it via the node shell instead.
+The API endpoints are defined here:
 
-Once you've finished the CorDapp's code, run it with the following steps:
+     clients/src/main/java/com/template/webserver/Controller.java
 
-* Build a test network of nodes by opening a terminal window at the root of
-  your project and running the following command:
+And a static webpage is defined here:
 
-    * Windows:   `gradlew.bat deployNodes`
-    * macOS:     `./gradlew deployNodes`
+     clients/src/main/resources/static/
 
-* Start the nodes by running the following command:
+#### Running the webserver
 
-    * Windows:   `build\nodes\runnodes.bat`
-    * macOS:     `build/nodes/runnodes`
+##### Via the command line
 
-* Open the nodes are started, go to the terminal of Party A (not the notary!)
-  and run the following command to issue 99 tokens to Party B:
+Run the `runTemplateServer` Gradle task. By default, it connects to the node with RPC address `localhost:10006` with 
+the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
 
-    `flow start TokenIssueFlow owner: PartyB, amount: 99`
+##### Via IntelliJ
 
-* You can now see the tokens in the vaults of Party A and Party B (but not 
-  Party C!) by running the following command in their respective terminals:
+Run the `Run Template Server` run configuration. By default, it connects to the node with RPC address `localhost:10006` 
+with the username `user1` and the password `test`, and serves the webserver on port `localhost:10050`.
 
-    `run vaultQuery contractStateType: bootcamp.TokenState`
+#### Interacting with the webserver
+
+The static webpage is served on:
+
+    http://localhost:10050
+
+While the sole template endpoint is served on:
+
+    http://localhost:10050/templateendpoint
+    
+# Extending the template
+
+You should extend this template as follows:
+
+* Add your own state and contract definitions under `contracts/src/main/java/`
+* Add your own flow definitions under `workflows/src/main/java/`
+* Extend or replace the client and webserver under `clients/src/main/java/`
+
+For a guided example of how to extend this template, see the Hello, World! tutorial 
+[here](https://docs.corda.net/hello-world-introduction.html).
