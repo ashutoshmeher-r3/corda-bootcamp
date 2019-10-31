@@ -1,4 +1,4 @@
-package bootcamp;
+package bootcamp.contracts;
 
 import org.junit.Test;
 

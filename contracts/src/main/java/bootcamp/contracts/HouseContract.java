@@ -1,4 +1,4 @@
-package bootcamp;
+package bootcamp.contracts;
 
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.Contract;

@@ -1,4 +1,4 @@
-package bootcamp.flows.webserver;
+package bootcamp.contracts.flows.webserver;
 
 import net.corda.client.rpc.CordaRPCClient;
 import net.corda.client.rpc.CordaRPCConnection;

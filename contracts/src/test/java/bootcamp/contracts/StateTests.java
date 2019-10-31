@@ -1,4 +1,4 @@
-package bootcamp;
+package bootcamp.contracts;
 
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.CordaX500Name;

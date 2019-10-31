@@ -1,4 +1,4 @@
-package bootcamp.flows;
+package bootcamp.contracts.flows;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.testing.node.MockNetwork;
@@ -11,15 +11,15 @@ import org.junit.Test;
 
 public class FlowTests {
     private final MockNetwork network = new MockNetwork(new MockNetworkParameters(ImmutableList.of(
-        TestCordapp.findCordapp("com.template.contracts"),
-        TestCordapp.findCordapp("com.template.flows")
+        TestCordapp.findCordapp("bootcamp.contracts"),
+        TestCordapp.findCordapp("bootcamp.flows")
     )));
     private final StartedMockNode a = network.createNode();
     private final StartedMockNode b = network.createNode();
 
     public FlowTests() {
-        a.registerInitiatedFlow(HouseTransferFlow.class);
-        b.registerInitiatedFlow(HouseTransferFlow.class);
+     //   a.registerInitiatedFlow(HouseTransferFlow.class);
+      //  b.registerInitiatedFlow(HouseTransferFlow.class);
     }
 
     @Before

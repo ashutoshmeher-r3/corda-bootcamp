@@ -1,14 +1,12 @@
-package bootcamp;
+package bootcamp.contracts;
 
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
-import net.corda.core.serialization.ConstructorForDeserialization;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 // *********
 // * HouseState *

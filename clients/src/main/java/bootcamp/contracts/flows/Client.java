@@ -1,4 +1,4 @@
-package bootcamp.flows;
+package bootcamp.contracts.flows;
 
 import net.corda.client.rpc.CordaRPCClient;
 import net.corda.core.messaging.CordaRPCOps;

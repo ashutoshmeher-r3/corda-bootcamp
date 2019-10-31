@@ -1,7 +1,7 @@
-package bootcamp.flows;
+package bootcamp.contracts.flows;
 
-import bootcamp.HouseContract;
-import bootcamp.HouseState;
+import bootcamp.contracts.HouseContract;
+import bootcamp.contracts.HouseState;
 import co.paralleluniverse.fibers.Suspendable;
 import com.google.common.collect.ImmutableList;
 import net.corda.core.flows.*;
