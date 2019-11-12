@@ -13,7 +13,7 @@ import net.corda.core.transactions.LedgerTransaction;
  */
 public class HouseContract implements Contract {
     // This is used to identify our contract when building a transaction.
-    public static final String ID = "bootcamp.HouseContract";
+    public static final String ID = "bootcamp.contracts.HouseContract";
 
     // A transaction is valid if the verify() function of the contract of all the transaction's input and output states
     // does not throw an exception.
@@ -66,7 +66,7 @@ public class HouseContract implements Contract {
 
         if(!(tx.getCommand(0).getSigners().contains(((HouseState)tx.getOutput(0)).getOwner().getOwningKey()) &&
                 tx.getCommand(0).getSigners().contains(((HouseState)tx.getInput(0)).getOwner().getOwningKey())))
-            throw new IllegalArgumentException("Buider must sign");
+            throw new IllegalArgumentException("Owner must sign");
 
         if(!compare((HouseState)tx.getInput(0), (HouseState)tx.getOutput(0)))
             throw new IllegalArgumentException("Incorrect House Transferred");

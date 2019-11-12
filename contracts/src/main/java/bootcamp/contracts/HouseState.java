@@ -11,10 +11,10 @@ import java.util.List;
 // *********
 // * HouseState *
 // *********
-@BelongsToContract(HouseContract.class)
 /**
  * TODO 1: Implement ContractState
  */
+@BelongsToContract(HouseContract.class)
 public class HouseState implements ContractState {
 
     /**

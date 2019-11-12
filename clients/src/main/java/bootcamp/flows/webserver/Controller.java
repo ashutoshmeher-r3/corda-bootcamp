@@ -1,4 +1,4 @@
-package bootcamp.contracts.flows.webserver;
+package bootcamp.flows.webserver;
 
 import net.corda.core.messaging.CordaRPCOps;
 import org.slf4j.Logger;

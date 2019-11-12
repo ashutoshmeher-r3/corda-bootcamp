@@ -1,4 +1,4 @@
-package bootcamp.contracts.flows;
+package bootcamp.flows;
 
 import org.junit.Test;
 

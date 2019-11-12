@@ -1,4 +1,4 @@
-package bootcamp.contracts.flows.webserver;
+package bootcamp.flows.webserver;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
